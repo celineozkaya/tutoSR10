@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <!-- header -->
     <%- include('partials/header') %>
     <title><%= title %></title>
 </head>
 <body>
+    <!-- navbar -->
     <%- include('partials/navbar') %>
 
+    <!-- contenu de la page chargé dynamiquement -->
     <main class="container mt-4">
         <%- include(page) %>
     </main>
