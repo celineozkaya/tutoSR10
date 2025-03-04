@@ -1,0 +1,53 @@
+<h1 class="text-center">Tableaux des résultats</h1>
+
+<!-- dropdown pour lister les utilisateurs -->
+<div class="container">
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Sélectionnez un utilisateur
+        </button>
+        <!-- affichage dynamique des utilisateurs -->
+        <div class="dropdown-menu" aria-labelledby="userDropdown">
+            <% users.etudiants.forEach(user => { %>
+                <a class="dropdown-item user-link" href="#" data-id="<%= user.id %>"><%= user.prenom %> <%= user.nom %></a>
+            <% }); %>
+        </div>
+    </div>
+</div>
+
+<!-- modale qui affiche le profil utlisateur choisi -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- entete de la modale -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Informations de l'utilisateur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- contenu de la modale chargé dynamiquement (public/js/modalUser.js) -->
+            <div class="modal-body">
+                <p><strong>Prénom :</strong> <span id="modalPrenom"></span></p>
+                <p><strong>Nom :</strong> <span id="modalNom"></span></p>
+                <p><strong>Email :</strong> <span id="modalEmail"></span></p>
+                <h6>Notes par UV :</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>UV</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalUVs">
+                        <!-- les uv sont insérées dynamiquement (public/js/modalUser.js) -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- pied de la modale -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

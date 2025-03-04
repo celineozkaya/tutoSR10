@@ -10,6 +10,14 @@ Techno : HTML, EJS, ExpressJS, NodeJS, Bootstrap
     - [Navbar](#navbar)
     - [Header](#header)
     - [Footer](#footer)
+- [Données](#données)
+- [Résultats sous forme de tableaux](#résultats-sous-forme-de-tableaux)
+    - [Route](#route)
+    - [Page](#page)
+    - [Gestion de la modale](#gestion-de-la-modale)
+- [Résultats sous forme de graphiques](#résultats-sous-forme-de-graphiques)
+    - [Route](#route-1)
+    - [Page](#page-1)
 
 ## Initialisation du projet
 Suivre les instructions : https://nodejs.org/fr/download
@@ -280,5 +288,197 @@ Le footer (footer.ejs) contient la bannière de bas de page et les scripts JS Bo
 
 À ce stade, la page d'accueil du site affiche un header, un menu, le contenu souhaité et un footer. Lancez l'application (```node server.js```) et rendez-vous à l'adresse http://localhost:3000 pour la visualiser.
 
+## Données
+```json
+{
+    "etudiants" : [ 
+    {
+        "id": 1,
+        "nom": "Pattin",
+        "prenom": "Startin",
+        "email": "pstartin0@spotify.com",
+        "UV": {
+            "SR03": 10,
+            "SR06": 8,
+            "SR07": 10,
+            "LO18": 9,
+            "NF11": 13
+        }
+    },
+    {
+        "id": 2,
+        "nom": "Zara",
+        "prenom": "Jozwik",
+        "email": "zjozwik1@reverbnation.com",
+        "UV": {
+            "SR03": 7,
+            "SR06": 16,
+            "SR07": 12,
+            "LO18": 15,
+            "NF11": 8
+        }
+    },
+    {
+        "id": 3,
+        "nom": "Dougie",
+        "prenom": "Carne",
+        "email": "dcarne2@wisc.edu",
+        "UV": {
+            "SR03": 17,
+            "SR06": 14,
+            "SR07": 12,
+            "LO18": 9,
+            "NF11": 14
+        }
+    }
+]}
+```
 
-- faire les routes pour onglets de resultats
+## Résultats sous forme de tableaux (expliquer le code)
+
+### Route
+
+La route /results/tables lit des données JSON.
+Elle les convertit en objet JS.
+Elle rend une page EJS en envoyant les données pour affichage.
+main.ejs agit comme un template principal qui charge dynamiquement tables.ejs.
+
+```js
+// route Tableaux
+app.get('/results/tables', (req, res) => {
+    // lire les donnees
+    const dataPath = path.join(__dirname, 'public/data/users.json');
+    fs.readFile(dataPath, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).send("Erreur lors de la lecture des données");
+        }
+        const users = JSON.parse(data); 
+        // rendre la vue ejs main.ejs en passant les donnees a pages/tables.ejs
+        res.render('main', {
+            // donnees envoyees a la vue
+            title : 'Tableaux',
+            page : 'pages/tables',
+            users : users
+        });
+    });
+});
+```
+
+
+
+### Page
+
+[Bootstrap pour les modales](https://getbootstrap.com/docs/5.3/components/modal/)
+
+
+```html
+<h1 class="text-center">Tableaux des résultats</h1>
+
+<!-- dropdown pour lister les utilisateurs -->
+<div class="container">
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Sélectionnez un utilisateur
+        </button>
+        <!-- affichage dynamique des utilisateurs -->
+        <div class="dropdown-menu" aria-labelledby="userDropdown">
+            <% users.etudiants.forEach(user => { %>
+                <a class="dropdown-item user-link" href="#" data-id="<%= user.id %>"><%= user.prenom %> <%= user.nom %></a>
+            <% }); %>
+        </div>
+    </div>
+</div>
+
+<!-- modale qui affiche le profil utlisateur choisi -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- entete de la modale -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Informations de l'utilisateur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- contenu de la modale chargé dynamiquement (public/js/modalUser.js) -->
+            <div class="modal-body">
+                <p><strong>Prénom :</strong> <span id="modalPrenom"></span></p>
+                <p><strong>Nom :</strong> <span id="modalNom"></span></p>
+                <p><strong>Email :</strong> <span id="modalEmail"></span></p>
+                <h6>Notes par UV :</h6>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>UV</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalUVs">
+                        <!-- les uv sont insérées dynamiquement (public/js/modalUser.js) -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- pied de la modale -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+
+
+
+### Gestion de la modale
+```javascript
+document.addEventListener("DOMContentLoaded", function () {
+    // recuperer tous les liens dans le dropdown
+    const userLinks = document.querySelectorAll(".user-link");
+    
+    // si on clic sur un des lien
+    userLinks.forEach(link => {
+        // ajout d'un evenement "click" sur les liens utilisateurs
+        link.addEventListener("click", function (event) {
+
+            // recuperer l'id de l'utilisateur
+            const userId = this.getAttribute("data-id");
+            
+            // charger les donnees liees a l'utilisateur
+            fetch("/data/users.json")
+                // transforme la reponse en un objet js
+                .then(response => response.json()) 
+                .then(users => {
+                    // trouver l'utilisateur correspondant
+                    const user = users.etudiants.find(u => u.id == userId); 
+                    
+                    // si l'utilisateur est valide
+                    if (user) {
+                        // maj le contenu de la modale avec les info de user
+                        document.getElementById("modalPrenom").textContent = user.prenom;
+                        document.getElementById("modalNom").textContent = user.nom;
+                        document.getElementById("modalEmail").textContent = user.email;
+                        
+                        const modalUVs = document.getElementById("modalUVs");
+                        modalUVs.innerHTML = ""; // vider le tableau avant d'ajouter du contenu
+                        
+                        // construire le tableau d'uv et note
+                        for (const [uv, note] of Object.entries(user.UV)) {
+                            let row = `<tr><td>${uv}</td><td>${note}</td></tr>`;
+                            modalUVs.innerHTML += row;
+                        }
+                        
+                        // afficher la modale
+                        let userModal = new bootstrap.Modal(document.getElementById("userModal"));
+                        userModal.show();
+                    }
+                })
+                .catch(error => console.error("Erreur lors du chargement des données :", error));
+        });
+    });
+});
+
+```
+
+
+## Résultats sous forme de graphiques
+### Route
+### Page

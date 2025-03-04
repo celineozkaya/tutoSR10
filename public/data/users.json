@@ -1,0 +1,264 @@
+{
+    "etudiants" : [ 
+    {
+        "id": 1,
+        "nom": "Pattin",
+        "prenom": "Startin",
+        "email": "pstartin0@spotify.com",
+        "UV": {
+            "SR03": 10,
+            "SR06": 8,
+            "SR07": 10,
+            "LO18": 9,
+            "NF11": 13
+        }
+    },
+    {
+        "id": 2,
+        "nom": "Zara",
+        "prenom": "Jozwik",
+        "email": "zjozwik1@reverbnation.com",
+        "UV": {
+            "SR03": 7,
+            "SR06": 16,
+            "SR07": 12,
+            "LO18": 15,
+            "NF11": 8
+        }
+    },
+    {
+        "id": 3,
+        "nom": "Dougie",
+        "prenom": "Carne",
+        "email": "dcarne2@wisc.edu",
+        "UV": {
+            "SR03": 17,
+            "SR06": 14,
+            "SR07": 12,
+            "LO18": 9,
+            "NF11": 14
+        }
+    },
+    {
+        "id": 4,
+        "nom": "Reeba",
+        "prenom": "Cuthbert",
+        "email": "rcuthbert3@boston.com",
+        "UV": {
+            "SR03": 13,
+            "SR06": 9,
+            "SR07": 15,
+            "LO18": 12,
+            "NF11": 10
+        }
+    },
+    {
+        "id": 5,
+        "nom": "Tomaso",
+        "prenom": "Hemphrey",
+        "email": "themphrey4@123-reg.co.uk",
+        "UV": {
+            "SR03": 12,
+            "SR06": 11,
+            "SR07": 17,
+            "LO18": 14,
+            "NF11": 9
+        }
+    },
+    {
+        "id": 6,
+        "nom": "Dorise",
+        "prenom": "McCarroll",
+        "email": "dmccarroll5@myspace.com",
+        "UV": {
+            "SR03": 8,
+            "SR06": 12,
+            "SR07": 16,
+            "LO18": 10,
+            "NF11": 15
+        }
+    },
+    {
+        "id": 7,
+        "nom": "Kennie",
+        "prenom": "Franey",
+        "email": "kfraney6@wufoo.com",
+        "UV": {
+            "SR03": 15,
+            "SR06": 14,
+            "SR07": 10,
+            "LO18": 8,
+            "NF11": 12
+        }
+    },
+    {
+        "id": 8,
+        "nom": "Decca",
+        "prenom": "Frede",
+        "email": "dfrede7@salon.com",
+        "UV": {
+            "SR03": 9,
+            "SR06": 15,
+            "SR07": 13,
+            "LO18": 16,
+            "NF11": 11
+        }
+    },
+    {
+        "id": 9,
+        "nom": "Etti",
+        "prenom": "Wardhaw",
+        "email": "ewardhaw8@about.com",
+        "UV": {
+            "SR03": 11,
+            "SR06": 10,
+            "SR07": 12,
+            "LO18": 14,
+            "NF11": 13
+        }
+    },
+    {
+        "id": 10,
+        "nom": "Atalanta",
+        "prenom": "Offill",
+        "email": "aoffill9@youku.com",
+        "UV": {
+            "SR03": 10,
+            "SR06": 13,
+            "SR07": 8,
+            "LO18": 17,
+            "NF11": 9
+        }
+    },
+    {
+        "id": 11,
+        "nom": "Parnell",
+        "prenom": "Portis",
+        "email": "pportisa@dmoz.org",
+        "UV": {
+            "SR03": 16,
+            "SR06": 9,
+            "SR07": 14,
+            "LO18": 11,
+            "NF11": 10
+        }
+    },
+    {
+        "id": 12,
+        "nom": "Maryrose",
+        "prenom": "Aitkin",
+        "email": "maitkinb@xinhuanet.com",
+        "UV": {
+            "SR03": 14,
+            "SR06": 11,
+            "SR07": 15,
+            "LO18": 9,
+            "NF11": 12
+        }
+    },
+    {
+        "id": 13,
+        "nom": "Zebedee",
+        "prenom": "McCrachen",
+        "email": "zmccrachenc@sohu.com",
+        "UV": {
+            "SR03": 13,
+            "SR06": 12,
+            "SR07": 9,
+            "LO18": 16,
+            "NF11": 8
+        }
+    },
+    {
+        "id": 14,
+        "nom": "Rustie",
+        "prenom": "Batterson",
+        "email": "rbattersond@businesswire.com",
+        "UV": {
+            "SR03": 12,
+            "SR06": 8,
+            "SR07": 11,
+            "LO18": 10,
+            "NF11": 14
+        }
+    },
+    {
+        "id": 15,
+        "nom": "Roger",
+        "prenom": "Dobel",
+        "email": "rdobele@reference.com",
+        "UV": {
+            "SR03": 11,
+            "SR06": 15,
+            "SR07": 17,
+            "LO18": 13,
+            "NF11": 9
+        }
+    },
+    {
+        "id": 16,
+        "nom": "Gwennie",
+        "prenom": "Kyles",
+        "email": "gkylesf@imgur.com",
+        "UV": {
+            "SR03": 17,
+            "SR06": 9,
+            "SR07": 14,
+            "LO18": 15,
+            "NF11": 8
+        }
+    },
+    {
+        "id": 17,
+        "nom": "Oren",
+        "prenom": "Ashington",
+        "email": "oashingtong@unc.edu",
+        "UV": {
+            "SR03": 8,
+            "SR06": 10,
+            "SR07": 12,
+            "LO18": 9,
+            "NF11": 11
+        }
+    },
+    {
+        "id": 18,
+        "nom": "Cullie",
+        "prenom": "Attew",
+        "email": "cattewh@goo.ne.jp",
+        "UV": {
+            "SR03": 14,
+            "SR06": 11,
+            "SR07": 17,
+            "LO18": 13,
+            "NF11": 7
+        }
+    },
+    {
+        "id": 19,
+        "nom": "Gideon",
+        "prenom": "Sisland",
+        "email": "gsislandi@tmall.com",
+        "UV": {
+            "SR03": 11,
+            "SR06": 9,
+            "SR07": 14,
+            "LO18": 13,
+            "NF11": 13
+        }
+    },
+    {
+        "id": 20,
+        "nom": "Giffie",
+        "prenom": "Cassella",
+        "email": "gcassellaj@guardian.co.uk",
+        "UV": {
+            "SR03": 9,
+            "SR06": 11,
+            "SR07": 10,
+            "LO18": 12,
+            "NF11": 16
+        }
+    }
+    ]
+}
