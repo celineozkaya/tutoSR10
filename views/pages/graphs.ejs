@@ -1,23 +1,21 @@
-<h1 class="text-center">Graphiques</h1>
+<h1 class="text-center mt-4">Graphiques</h1>
 
-<!-- liste deroulante des utilisateurs -->
-
-<div class="container mt-4">
-    <!-- graphique camembert global-->
-    <div class="row">
-        <div class="col-md-6">
-            <canvas id="pieChart"></canvas>
-            camembert
-        </div>
-    <!-- graphique histogramme propre a l'utilisateur sélectionné -->
-        <div class="col-md-6">
-            <canvas id="barChart"></canvas>
-            histogramme
-        </div>
+<!-- graphique camembert -->
+<div class="container mt-4 d-flex justify-content-center">
+    <div class="col-md-6">
+        <canvas id="pieChart"></canvas>
     </div>
 </div>
 
-<!-- injection des donnees utilisateurs pour le script graphes.js -->
+<!-- conteneur pour les histogrammes -->
+<div class="container mt-4 d-flex justify-content-center">
+    <div class="col-md-6">
+        <div id="barChartsContainer"></div>
+    </div>
+</div>
+
+
+<!-- injection des données utilisateurs pour le script graphes.js -->
 <script id="usersData" type="application/json"><%- JSON.stringify(users) %></script>
 <script src="/chartjs/chart.umd.js"></script>
 <script src="/js/graphes.js"></script>

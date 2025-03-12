@@ -470,13 +470,12 @@ Le pied de la modale (```<div class="modal-footer">```) contient un bouton "Ferm
 ```
 
 ### Gestion de la modale
-Le script **public/js/modalUser.js** "écoute" chacun des liens du dropdown et récupère l'identifiant de celui sur lequel on a cliqué (link.addEventListener("click", ...)). On cherche ensuite l'utilisateur possèdant cette id dans le fichier users.json. S'il y a une correspondance, on remplit le contenu de la modale avec les informations de l'utilisateur.
+Le script **public/js/modalUser.js** "écoute" chacun des liens du dropdown et récupère l'identifiant de celui sur lequel on a cliqué (link.addEventListener("click", ...)). On cherche ensuite l'utilisateur possédant cette id dans la liste des users. S'il y a une correspondance, on remplit le contenu de la modale avec les informations de l'utilisateur.
 
 La modale affiche également un tableau listant les notes de l'utilisateur pour chaque UV. On construit ce tableau dynamiquement depuis le script et on l'ajoute au contenu de la modale.
 
 ```javascript
-document.addEventListener("DOMContentLoaded", function () {
-    // recuperer tous les liens dans le dropdown
+ // recuperer tous les liens dans le dropdown
     const userLinks = document.querySelectorAll(".user-link");
     
     // si on clic sur un des lien
@@ -487,40 +486,35 @@ document.addEventListener("DOMContentLoaded", function () {
             // recuperer l'id de l'utilisateur
             const userId = this.getAttribute("data-id");
             
-            // charger les donnees liees a l'utilisateur
-            fetch("/data/users.json")
-                // transforme la reponse en un objet js
-                .then(response => response.json()) 
-                .then(users => {
-                    // trouver l'utilisateur correspondant
-                    const user = users.etudiants.find(u => u.id == userId); 
-                    
-                    // si l'utilisateur est valide
-                    if (user) {
-                        // maj le contenu de la modale avec les info de user
-                        document.getElementById("modalPrenom").textContent = user.prenom;
-                        document.getElementById("modalNom").textContent = user.nom;
-                        document.getElementById("modalEmail").textContent = user.email;
-                        
-                        const modalUVs = document.getElementById("modalUVs");
-                        modalUVs.innerHTML = ""; // vider le tableau avant d'ajouter du contenu
-                        
-                        // construire le tableau d'uv et note
-                        for (const [uv, note] of Object.entries(user.UV)) {
-                            let row = `<tr><td>${uv}</td><td>${note}</td></tr>`;
-                            modalUVs.innerHTML += row;
-                        }
-                        
-                        // afficher la modale
-                        let userModal = new bootstrap.Modal(document.getElementById("userModal"));
-                        userModal.show();
-                    }
-                })
-                .catch(error => console.error("Erreur lors du chargement des données :", error));
+            // recuperer les utilisateurs
+            const usersDataElement = document.getElementById("usersData");
+            const users = JSON.parse(usersDataElement.textContent);
+
+            // trouver l'utilisateur correspondant
+            const user = users.etudiants.find(u => u.id == userId); 
+                
+            // si l'utilisateur est valide
+            if (user) {
+                // maj le contenu de la modale avec les info de user
+                document.getElementById("modalPrenom").textContent = user.prenom;
+                document.getElementById("modalNom").textContent = user.nom;
+                document.getElementById("modalEmail").textContent = user.email;
+                
+                const modalUVs = document.getElementById("modalUVs");
+                modalUVs.innerHTML = ""; // vider le tableau avant d'ajouter du contenu
+                
+                // construire le tableau d'uv et note
+                for (const [uv, note] of Object.entries(user.UV)) {
+                    let row = `<tr><td>${uv}</td><td>${note}</td></tr>`;
+                    modalUVs.innerHTML += row;
+                }
+                
+                // afficher la modale
+                let userModal = new bootstrap.Modal(document.getElementById("userModal"));
+                userModal.show();
+            }
         });
     });
-});
-
 ```
 
 
@@ -579,13 +573,9 @@ Le code de la page **graphes.ejs** :
 ```html
 <h1 class="text-center">Graphiques</h1>
 
-<div class="container mt-4">
-    <!-- graphique camembert global-->
-    <div class="row">
-        <div class="col-md-6">
-            <canvas id="pieChart"></canvas>
-            camembert
-        </div>
+<div class="container mt-4 d-flex justify-content-center">
+    <div class="col-md-6">
+        <canvas id="pieChart"></canvas>
     </div>
 </div>
 
@@ -665,4 +655,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 ```
+
+
 
