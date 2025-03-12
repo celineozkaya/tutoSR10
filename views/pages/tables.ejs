@@ -1,19 +1,6 @@
 <h1 class="text-center">Tableaux des résultats</h1>
 
-<!-- dropdown pour lister les utilisateurs -->
-<div class="container">
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            Sélectionnez un utilisateur
-        </button>
-        <!-- affichage dynamique des utilisateurs -->
-        <div class="dropdown-menu" aria-labelledby="userDropdown">
-            <% users.etudiants.forEach(user => { %>
-                <a class="dropdown-item user-link" href="#" data-id="<%= user.id %>"><%= user.prenom %> <%= user.nom %></a>
-            <% }); %>
-        </div>
-    </div>
-</div>
+<%- include('../partials/dropdownUsers') %>
 
 <!-- modale qui affiche le profil utlisateur choisi -->
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
@@ -49,5 +36,10 @@
         </div>
     </div>
 </div>
+
+<!-- injection des donnees utilisateurs pour le script modalUsers.js -->
+<script id="usersData" type="application/json"><%- JSON.stringify(users) %></script>
+<script src="/js/modalUser.js"></script>
+
 
 

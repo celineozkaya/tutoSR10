@@ -6,11 +6,11 @@
         "prenom": "Startin",
         "email": "pstartin0@spotify.com",
         "UV": {
-            "SR03": 10,
+            "SR03": 9,
             "SR06": 8,
-            "SR07": 10,
+            "SR07": 7,
             "LO18": 9,
-            "NF11": 13
+            "NF11": 10
         }
     },
     {
@@ -136,11 +136,11 @@
         "prenom": "Portis",
         "email": "pportisa@dmoz.org",
         "UV": {
-            "SR03": 16,
-            "SR06": 9,
-            "SR07": 14,
-            "LO18": 11,
-            "NF11": 10
+            "SR03": 12,
+            "SR06": 13,
+            "SR07": 15,
+            "LO18": 17,
+            "NF11": 11
         }
     },
     {
@@ -240,11 +240,11 @@
         "prenom": "Sisland",
         "email": "gsislandi@tmall.com",
         "UV": {
-            "SR03": 11,
-            "SR06": 9,
-            "SR07": 14,
-            "LO18": 13,
-            "NF11": 13
+            "SR03": 17,
+            "SR06": 16,
+            "SR07": 15,
+            "LO18": 15,
+            "NF11": 14
         }
     },
     {
@@ -254,10 +254,10 @@
         "email": "gcassellaj@guardian.co.uk",
         "UV": {
             "SR03": 9,
-            "SR06": 11,
+            "SR06": 6,
             "SR07": 10,
-            "LO18": 12,
-            "NF11": 16
+            "LO18": 11,
+            "NF11": 8
         }
     }
     ]

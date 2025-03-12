@@ -9,7 +9,7 @@ Ce tutoriel permet de créer une application affichant des informations sur des 
 
 - [EJS (Embedded JavaScript Templates)](https://ejs.co/#install) : Un moteur de template qui nous permet d’inclure du code JavaScript directement dans nos pages HTML et de générer dynamiquement du contenu.
 
-- [Bootstrap(https://getbootstrap.com/docs/5.3/getting-started/introduction/)] : Une bibliothèque CSS et JavaScript qui offre des styles et des composants prêts à l’emploi pour rendre notre application plus esthétique et interactive.
+- [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/) : Une bibliothèque CSS et JavaScript qui offre des styles et des composants prêts à l’emploi pour rendre notre application plus esthétique et interactive.
 
 ## Sommaire
 - [Initialisation du projet](#initialisation-du-projet)
@@ -199,7 +199,7 @@ La Navbar est un menu de navigation. Pour générer un menu, on utilise la balis
                        data-bs-toggle="dropdown" aria-expanded="false">
                         Résultats
                     </a>
-                    <!-- sous onglets -->
+                    <!-- sous onglets sans lien car pas encore créés -->
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="/">Tableaux</a></li>
                         <li><a class="dropdown-item" href="/">Graphiques</a></li>
@@ -381,6 +381,11 @@ app.get('/results/tables', (req, res) => {
     });
 });
 ```
+On pense aussi à modifier la navbar pour y mettre le lien de la page à présent active :
+
+```html
+<li><a class="dropdown-item" href="/results/tables">Tableaux</a></li>
+```
 
 ### Page
 
@@ -397,7 +402,7 @@ Le ```<div class="container"></div>``` sert à générer la liste d'utilisateurs
 Les éléments de la liste d'utilisateurs sont des liens (```<a class="dropdown-item user-link"></a>```) auxquels on associe un identifiant unique (```data-id="<%= user.id %>"```) de sorte à les différencier et à afficher le contenu associé à l'utilisateur choisi au sein de la modale. 
 
 #### La modale
-La modale est implémentée juste en dessous, dans le ```<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">```. Au départ, elle est cachée (aria-hidden="true") puisqu'on ne souhaite l'afficher qu'à la selection d'un utilisateur de la liste.
+La modale est implémentée juste en dessous, dans le ```<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">```. L'attribut ```aria-hidden``` d'un composant HTML permet de masquer les éléments non essentiels (décoratifs, redondants, etc.) aux lecteurs d'écran. Cela assure l'accessibilité du site web et n'a aucun impact sur l'affichage à l'écran. 
 
 L'entête de la modale (```<div class="modal-header">```) contient son titre et une croix pour fermer la modale.
 
@@ -521,7 +526,143 @@ document.addEventListener("DOMContentLoaded", function () {
 
 ## Résultats sous forme de graphiques
 
-### Route
+Cette section permet d'implémenter des graphes pour la visualisation des notes des utilisateurs. Nous allons faire un camembert relatif aux moyennes des étudiants (la part dans laquelle chacun s'inscrit) et un histogramme montrant les notes d'un utilisateur (qui sera sélectionné depuis un dropdown) pour chaque UV. 
 
+On note la répétition du dropdown listant les utilisateurs. Plutôt que de réécrire le code, on le retire du fichier **tables.ejs** et on le place dans un fichier dédié **/views/partials/dropdownUsers.ejs**. On pourra ainsi faire appelle à la liste déroulante aux endroits voulus sans dupliquer le code de cette façon :
+
+```<%- include('../partials/dropdownUsers') %>```
+
+### Installation et intégration de Chart.js
+[Chart.js](https://www.chartjs.org/docs/latest/getting-started/) permet d'intégrer des graphiques (camembert, histogrammes, nuages de points, etc.) à une page web. 
+
+Installer le paquet :
+```shell
+npm install chart.js
+```
+
+L'intégrer à **server.js** :
+```javascript
+// chartjs
+app.use('/chartjs', express.static(__dirname + '/node_modules/chart.js/dist'));
+```
+
+### Route
+On ajoute une route pour cette nouvelle page dans le fichier **server.js** :
+
+```javascript
+// route Graphiques
+app.get('/results/graphs', (req, res) => {
+    // lire les donnees
+    const dataPath = path.join(__dirname, 'public/data/users.json');
+    fs.readFile(dataPath, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).send("Erreur lors de la lecture des données");
+        }
+        const users = JSON.parse(data);
+        // rendre la vue ejs main.ejs en passant les donnees a pages/graphs.ejs
+        res.render('main', {
+            // donnees envoyees a la vue
+            title : 'Graphiques',
+            page : 'pages/graphs',
+            users : users
+        });
+    });
+}); 
+```
 
 ### Page
+
+On crée la page associée dans un fichier **/views/pages/graphes.ejs** et on met le vrai lien de la page dans la navbar : ```<li><a class="dropdown-item" href="/result/graphes">Graphiques</a></li>```
+
+Le code de la page **graphes.ejs** :
+
+```html
+<h1 class="text-center">Graphiques</h1>
+
+<div class="container mt-4">
+    <!-- graphique camembert global-->
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="pieChart"></canvas>
+            camembert
+        </div>
+    </div>
+</div>
+
+<!-- injection des donnees utilisateurs pour le script graphes.js -->
+<script id="usersData" type="application/json"><%= JSON.stringify(users) %></script>
+<script src="/chartjs/chart.umd.js"></script>
+<script src="/js/graphes.js"></script>
+```
+Ici, on crée un graphique en camembert grâce à l'élément HTML ```<canvas>``` qui sera peuplé par le script **public/js/graphes.js**. 
+
+
+### Script (graphes.js)
+
+Dans le script, on récupère les données des utilisateurs et on crée les catégories du diagramme (variable "categories"). Puis, pour chaque étudiant, on calcule sa moyenne à partir de sa liste de note et on incrémente la catégorie de moyenne dans laquelle il se trouve.
+
+On récupère l'identifiant de l'élément HTML ```<canvas id="pieChart">``` avec ```const ctx = document.getElementById("pieChart");``` pour [créer le diagramme](https://www.chartjs.org/docs/latest/getting-started/#create-a-chart) avec ```new Chart(ctx, {...})```. On y renseigne ses attributs type (ici, "pie" pour camembert), data (labels : les clés, datasets : les valeurs de "categories" et les couleurs du graphe) et éventuelles options (titre, etc.).
+
+```javascript
+document.addEventListener("DOMContentLoaded", function () {
+    // recuperer les utilisateurs
+    const usersDataElement = document.getElementById("usersData");
+    const users = JSON.parse(usersDataElement.textContent);
+
+    // categories de moyenne
+    const categories = { "< 5": 0, "5-10": 0, "10-15": 0, "> 15": 0 };
+
+    // pour chaque etudiant
+    users.etudiants.forEach(user => {
+        // liste des uv de user
+        const uvKeys = Object.keys(user.UV); // ex : ["SR03", "SR06", "SR07", "LO18", "NF11"]
+
+        // liste des notes de user
+        const uvValues = Object.values(user.UV); // ex : [10, 8, 10, 9, 13]
+
+        // somme des notes de user
+        const total = uvValues.reduce((sum, note) => sum + note, 0);
+
+        // nombre d'UVs de user
+        const nombreUVs = uvKeys.length;
+
+        // moyenne
+        const moyenne = total / nombreUVs;
+        if (moyenne < 5){
+            categories["< 5"]++;
+        } 
+        else if (moyenne < 10){
+            categories["5-10"]++;
+        }
+        else if (moyenne < 15){
+            categories["10-15"]++;
+        } 
+        else{
+            categories["> 15"]++;
+        }
+    });
+        
+    // creation du camembert
+    const ctx = document.getElementById("pieChart");
+    new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: Object.keys(categories),
+            datasets: [{
+                data: Object.values(categories),
+                backgroundColor: ["#9cb0d8", "#d89cce", "#d8c49c", "#9cd8a6"]
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Part d\'étudiants par catégorie de moyenne'
+                }
+            }
+        }
+    });
+});
+
+```
+

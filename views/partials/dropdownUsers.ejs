@@ -1,0 +1,15 @@
+<!-- dropdown pour lister les utilisateurs -->
+<div class="mb-3">
+<!-- <div class="container"> -->
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Sélectionnez un utilisateur
+        </button>
+        <!-- affichage dynamique des utilisateurs -->
+        <div class="dropdown-menu" aria-labelledby="userDropdown">
+            <% users.etudiants.forEach(user => { %>
+                <a class="dropdown-item user-link" href="#" data-id="<%= user.id %>"><%= user.prenom %> <%= user.nom %></a>
+            <% }); %>
+        </div>
+    </div>
+</div>
