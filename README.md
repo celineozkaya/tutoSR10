@@ -2,14 +2,14 @@
 Techno : HTML, EJS, ExpressJS, NodeJS, Bootstrap
 
 ## Introduction
-Ce tutoriel permet de créer une application affichant des informations sur des utilisateurs ainsi que leurs résultats académiques sous forme de tableaux et graphiques. Pour ce faire, nous utilisons les technologies du développement web suivantes : 
-- [Node.js](https://nodejs.org/en/about) : Un environnement d’exécution JavaScript côté serveur, qui nous permet de créer des applications web performantes sans avoir besoin d’un serveur comme Apache ou Nginx.
+Ce tutoriel permet de créer une application affichant des informations sur des utilisateurs ainsi que leurs résultats académiques sous forme de tableaux et graphiques. Pour ce faire, nous utilisons les technologies suivantes : 
+- [Node.js](https://nodejs.org/en/about) : Un environnement d’exécution JavaScript côté serveur, qui nous permet de créer des applications web sans avoir besoin d’un serveur comme Apache ou Nginx.
 
 - [Express.js](https://expressjs.com/en/starter/installing.html) : Un framework minimaliste pour Node.js, qui facilite la création d’applications web et la gestion des routes et requêtes HTTP.
 
-- [EJS (Embedded JavaScript Templates)](https://ejs.co/#install) : Un moteur de template qui nous permet d’inclure du code JavaScript directement dans nos pages HTML et de générer dynamiquement du contenu.
+- [EJS (Embedded JavaScript)](https://ejs.co/#install) : EJS est un moteur de templates utilisé avec Node.js pour générer dynamiquement du HTML. Il permet d’insérer facilement des variables, des boucles ou des conditions JavaScript directement dans le code HTML, par exemple <%= variable %> pour afficher une valeur. EJS est utile lorsqu’on veut créer des pages web personnalisées en fonction des données : par exemple, afficher une liste d’utilisateurs récupérée depuis une base de données. On l’utilise souvent dans des applications web avec Express.js, pour séparer la logique du serveur et l’affichage.
 
-- [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/) : Une bibliothèque CSS et JavaScript qui offre des styles et des composants prêts à l’emploi pour rendre notre application plus esthétique et interactive.
+- [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/) : Bootstrap est une bibliothèque gratuite et open source, qui permet de créer facilement des sites web modernes, responsives et bien structurés. Elle fournit un ensemble de styles prédéfinis (boutons, formulaires, menus, etc.) ainsi que des composants interactifs (comme des carrousels ou des fenêtres modales) prêts à l’emploi. Bootstrap s’adapte automatiquement à tous les types d’écrans (ordinateur, tablette, mobile) grâce à un système de grille flexible. On l’utilise donc principalement pour gagner du temps lors de la création d’interfaces web, sans avoir à tout coder en CSS ou JavaScript soi-même.
 
 ## Sommaire
 - [Initialisation du projet](#initialisation-du-projet)
@@ -39,7 +39,9 @@ cd mon_projet
 npm init -y
 npm install express ejs
 ```
-A ce stade, les fichiers package.json et package-lock.json et le dossier node_modules sont crées. 
+A ce stade, les fichiers package.json et package-lock.json ainsi que le dossier node_modules sont crées. 
+
+Le fichier package.json décrit les informations du projet et liste les dépendances (les bibliothèques que le projet utilise, par exemple, dans ce projet : express, ejs, chart.js) nécessaires. Le fichier package-lock.json enregistre les versions installées pour garantir une installation identique sur toutes les machines. Le dossier node_modules est un répertoire créé automatiquement par npm (le gestionnaire de paquets de Node.js) qui contient toutes les dépendances et bibliothèques dont votre projet a besoin pour fonctionner. Vous pouvez ignorer ces fichiers et dossier. Une bonne pratique est de placer node_module dans le .gitignore avant de pousser votre projet puisqu'il est lourd et généré automatiquement.
 
 Pour lancer l'application : 
 ```shell
@@ -60,15 +62,17 @@ Voici l'architecture finale du projet :
 │   │-- data/
 │   │   |-- user.json
 │   │-- js/
-│   │   |-- script.js
+│   │   |-- graphes.js
+│   │   |-- modalUser.js
 │   │-- images/
-│   │   |-- logo.png
+│   │   |-- logo.jpg
 │-- /views
 │   │-- pages/
-│   |   │-- form.ejs
-│   |   │-- results.ejs
+│   |   │-- graphs.ejs
 │   |   │-- index.ejs
+│   |   │-- tables.ejs
 │   │-- partials/
+│   │   |-- dropdownUsers.ejs
 │   │   |-- header.ejs
 │   │   |-- navbar.ejs
 │   │   |-- footer.ejs
@@ -77,9 +81,9 @@ Voici l'architecture finale du projet :
 │-- package.json
 │-- server.js
 ```
-- **public** : contient les scripts Javascript, les données sous forme de fichiers JSON et les images
+- **public** : contient les scripts Javascript, les données sous forme de fichiers JSON et les images du site
 
-- **views** : contient les vues sous forme de fichiers EJS. Les composants réutilisés au sein du projet sont placés dans le dossier partials (ex : navbar) et les pages du site dans le dossier page (ex : la page d'accueil index.ejs). Le dossier contient aussi un fichier main.ejs qui sert de layout principal. Il intègre les partials (header, navbar, footer) et charge dynamiquement le contenu central.
+- **views** : contient les vues (contenu html) sous forme de fichiers EJS. Les composants réutilisés au sein du projet sont placés dans le dossier partials (ex : navbar) et les pages du site dans le dossier page (ex : la page d'accueil index.ejs). Le dossier contient aussi un fichier main.ejs qui sert de layout principal. Il intègre les partials (header, navbar, footer) et charge dynamiquement le contenu central.
 - **server.js** : utilise EJS comme moteur de template et permet de mettre en place l'application (configurer Express, gérer les routes, servir les fichiers statiques, etc.)
 - **package.json** et **package-lock.json** : contiennent des configurations et informations sur l'application
 
@@ -87,7 +91,7 @@ Voici l'architecture finale du projet :
 Voici le squelette de base de **server.js** :
 
 ```javascript
-const express = require('express'); // importer express
+const express = require('express');
 const path = require('path'); 
 
 const app = express();
@@ -212,7 +216,7 @@ La Navbar est un menu de navigation. Pour générer un menu, on utilise la balis
 ```
 #### Utilisation de bootstrap
 
-Les différentes classes utilisées (class="...") proviennent de Bootstrap. Elles permettent d'ajouter du style et d'activer des fonctionnalités interactives sans avoir à écrire de CSS ou JavaScript personnalisé. Pour que ces fonctionnalités soient activées, il faut charger bootstrap dans le footer et le header (footer.ejs et header.ejs) que l'on développera dans la partie suivante. 
+Les différentes classes utilisées (class="...") proviennent de Bootstrap. Elles permettent d'ajouter du style et d'activer des fonctionnalités interactives sans avoir à écrire de CSS ou JavaScript personnalisé. Pour que ces fonctionnalités soient activées, il faut charger Bootstrap dans le footer et le header (footer.ejs et header.ejs) que l'on développera dans la partie suivante. 
 
 Bootstrap présente une multitude de styles et interactions permettant de se passer du développement de fichiers CSS. Il est intéressant de consulter [son catalogue](https://getbootstrap.com/docs/5.3/getting-started/introduction/).
 
@@ -314,9 +318,9 @@ Cette application de présente pas de backend. On ne manipulera pas non plus de 
     "etudiants" : [ 
     {
         "id": 1,
-        "nom": "Pattin",
-        "prenom": "Startin",
-        "email": "pstartin0@spotify.com",
+        "nom": "Alice",
+        "prenom": "Bob",
+        "email": "alice@email.com",
         "UV": {
             "SR03": 10,
             "SR06": 8,
@@ -327,9 +331,9 @@ Cette application de présente pas de backend. On ne manipulera pas non plus de 
     },
     {
         "id": 2,
-        "nom": "Zara",
-        "prenom": "Jozwik",
-        "email": "zjozwik1@reverbnation.com",
+        "nom": "Bob",
+        "prenom": "Alice",
+        "email": "bob@email.com",
         "UV": {
             "SR03": 7,
             "SR06": 16,
@@ -340,9 +344,9 @@ Cette application de présente pas de backend. On ne manipulera pas non plus de 
     },
     {
         "id": 3,
-        "nom": "Dougie",
-        "prenom": "Carne",
-        "email": "dcarne2@wisc.edu",
+        "nom": "Lili",
+        "prenom": "Lala",
+        "email": "lili@email.com",
         "UV": {
             "SR03": 17,
             "SR06": 14,
@@ -353,7 +357,6 @@ Cette application de présente pas de backend. On ne manipulera pas non plus de 
     }
 ]}
 ```
-## Formulaire d'ajout d'un utilisateur
 
 ## Résultats sous forme de tableaux
 
